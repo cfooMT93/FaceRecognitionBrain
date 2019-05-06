@@ -1,14 +1,15 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  font-family: "Courier New", 'Courier New', Courier, monospace;
+  
+  /* add background gradient */
+  background: linear-gradient(89deg, #FF5EDF 0%, #04C8DE 100%);
+  /* makes background fit window */
+  height: 100vh;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+/* makes all buttons have a cursor change into a pointer when hovered */
+button {
+  cursor: pointer;
 }
