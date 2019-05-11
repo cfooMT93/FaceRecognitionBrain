@@ -31,9 +31,10 @@ class SignIn extends React.Component {
         })
             // Changes route if email/pw input is correct, else you stay on the same route and it outputs an error and bad request status
             .then(response => response.json())
-            .then(data => {
-                if (data === 'success') {
-                    this.props.onRouteChange('home')
+            .then(user => {
+                if (user.id) {
+                    this.props.loadUser(user);
+                    this.props.onRouteChange('home');
                 }
             })
         
