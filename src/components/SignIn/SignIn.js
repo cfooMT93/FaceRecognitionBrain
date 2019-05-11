@@ -19,7 +19,7 @@ class SignIn extends React.Component {
     onSubmitSignIn = () => {
         // fetch() by default does a 'GET' request, but we want to do a 'POST'
         // To do a POST request:
-        // We pass an object in the second parameter that describes what the request will be: method, headers, body {email, password}
+        // We paWss an object in the second parameter that describes what the request will be: method, headers, body {email, password}
         // In order to send it to the backend, we can't just send it a Javascript object--we have to JSON.stringify() the object
         fetch('http://localhost:3000/signin', {
             method: 'post',
