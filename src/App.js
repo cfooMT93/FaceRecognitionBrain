@@ -58,6 +58,13 @@ class App extends Component {
     }
   }
 
+  // FETCH your smart-brain-api - commented out bc it was just to test and learn about 'cors'
+  // componentDidMount() {
+  //   fetch('http://localhost:3000/')
+  //     .then(response => response.json())
+  //     .then(console.log); // shorthand version of logging data; long way would be: .then(data => console.log(data))
+  // }
+
   // this function receives the calculation from calculateFaceLocation
   displayFaceBox = (box) => {
     console.log(box);
