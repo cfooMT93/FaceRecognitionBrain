@@ -1,21 +1,21 @@
 import React, { Component } from 'react';
 import Particles from 'react-particles-js';
-import Clarifai from 'clarifai';
 import './App.css';
-import Navigation from './components/Navigation/Navigation';
-import Logo from './components/Logo/Logo';
-import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
-import Rank from './components/Rank/Rank';
-import FaceRecognition from './components/FaceRecognition/FaceRecognition';
-import SignIn from './components/SignIn/SignIn';
-import Register from './components/Register/Register';
+import Navigation from '../components/Navigation/Navigation';
+import Logo from '../components/Logo/Logo';
+import ImageLinkForm from '../components/ImageLinkForm/ImageLinkForm';
+import Rank from '../components/Rank/Rank';
+import FaceRecognition from '../components/FaceRecognition/FaceRecognition';
+import SignIn from '../components/SignIn/SignIn';
+import Register from '../components/Register/Register';
 
 // this just means to importing it like the above.
 // const Clarifai = require('clarifai');
 
-const app = new Clarifai.App({
- apiKey: '1600eaf37080404690838429f4578d3a'
-});
+// API Key moved to Backend
+// const app = new Clarifai.App({
+//   apiKey: '1600eaf37080404690838429f4578d3a'
+//  });
 
 const particlesOptions = {
   particles: {
@@ -29,26 +29,29 @@ const particlesOptions = {
   }
 }
 
+// initialState - fixes the bug where if you login & submit an image with one user, logout, then login with a different user--it won't show the previous user's saved state with the image they just sent.
+const initialState = {
+    input: '',
+    imageUrl: '',
+    box: {},
+    // route keeps track of where we are on the page
+    route: 'signin',
+    // start off with 'false' for testing purposes
+    isSignedIn: false,
+    user: {
+        id: '',
+        name: '',
+        email: '',
+        entries: 0,
+        joined: ''
+    }
+}
+
 class App extends Component {
   // Create a state for our app to store the value the user enters and updates it
   constructor() {
     super();
-    this.state = {
-      input: '',
-      imageUrl: '',
-      box: {},
-      // route keeps track of where we are on the page
-      route: 'signin',
-      // start off with 'false' for testing purposes
-      isSignedIn: false,
-      user: {
-          id: '',
-          name: '',
-          email: '',
-          entries: 0,
-          joined: ''
-      }
-    }
+    this.state = initialState;
   }
 
   loadUser = (data) => {
@@ -96,10 +99,21 @@ class App extends Component {
 
   onButtonSubmit = () => {
     this.setState({imageUrl: this.state.input});
-    app.models
-      .predict(
-        Clarifai.FACE_DETECT_MODEL, 
-        this.state.input)
+    // Clarifai call moved to backend with api key
+    // app.models
+    //   .predict(
+    //     Clarifai.FACE_DETECT_MODEL, 
+    //     this.state.input)
+
+    // Gives a response for /imageurl
+      fetch('http://localhost:3000/imageurl', {
+              method: 'post',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({
+                input: this.state.input
+              })
+      })
+      .then(response => response.json())
       .then(response => {
         if (response) {
           fetch('http://localhost:3000/image', {
@@ -113,8 +127,9 @@ class App extends Component {
           .then(count => {
             // instead of setState({user: { entries: count }}) as it will change the user's name the next time its updated (or image submitted), use Object.assign
             this.setState(Object.assign(this.state.user, { entries: count }))
-            }
-          )
+            })
+            // Always do a .catch after .then
+            .catch(console.log);
         }
         this.displayFaceBox(this.calculateFaceLocation(response))
         })
@@ -125,7 +140,7 @@ class App extends Component {
   onRouteChange = (route) => {
     // If we signout, set state of 'isSignedIn' to 'false', else if route is home then set state of 'isSignedIn' to 'true'; and no matter what, we still want to change the route
     if (route === 'signout') {
-      this.setState({isSignedIn: false})
+      this.setState(initialState)
     } else if (route === 'home') {
       this.setState({isSignedIn: true})
     }
